@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.sinso.dataland.mapper.FolderMapper">
+
+    <select id="getFileList" resultType="io.sinso.dataland.model.FileCollection">
+        select id,folder_name as nft_name, null as image_url,
+        null as sinso_url, null as collected, null as created,null as favorited,
+        null as manually_click, null as nft_format,
+        null as logo, null as chain ,1 as type,null as source_url,null as nft_contract from co_folder where
+        user_id=#{userId,jdbcType=INTEGER}
+        <if test="parentId!=null and parentId!=''">
+            and parent_id=#{parentId,jdbcType=INTEGER}
+        </if>
+        <if test="searchMsg!=null and searchMsg!=''">
+            and folder_name like concat("%",#{searchMsg},"%")
+        </if>
+        union all
+        select id ,nft_name ,image_url,sinso_url,is_collected as collected,
+        is_created as created,is_favorited as favorited, is_manually_click as manually_click
+        ,nft_format,logo,`chain` ,2 as type ,source_url,nft_contract from co_file_collection
+        where user_id=#{userId,jdbcType=INTEGER} and is_del=false
+        <if test="parentId!=null and parentId!=''">
+            and folder_id=#{parentId,jdbcType=INTEGER}
+        </if>
+        <if test="searchMsg!=null and searchMsg!=''">
+            and nft_name like concat("%",#{searchMsg},"%")
+        </if>
+        <if test="type==2">
+            and is_created=true
+        </if>
+        <if test="type==3">
+            and is_favorited=true
+        </if>
+        <if test="type==4">
+            and is_collected=true
+        </if>
+        <if test="nftFormat==2">
+            and nft_format like concat("%image%")
+        </if>
+        <if test="nftFormat==3">
+            and nft_format like concat("%video%")
+        </if>
+        <if test="nftFormat==4">
+            and nft_format like concat("%audio%")
+        </if>
+        <if test="nftFormat==5">
+            and nft_format like concat("%model%")
+        </if>
+        <if test="nftFormat==6">
+            and nft_format like concat("%unknown%")
+        </if>
+        order by type asc
+        <if test="state==1">
+            , id desc
+        </if>
+        <if test="state==2">
+            , nft_name asc
+        </if>
+        limit #{limit,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+</mapper>

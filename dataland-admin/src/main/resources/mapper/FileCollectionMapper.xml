@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.sinso.dataland.mapper.FileCollectionMapper">
+
+    <select id="getMintStatistical" resultType="io.sinso.dataland.model.FileCollection">
+        SELECT count(address) as id,address as nft_name from co_file_collection a1 LEFT JOIN co_user a2 on
+        a1.user_id=a2.id where a1.is_mint=true
+        and a1.created_at &gt;= #{min,jdbcType=TIMESTAMP}
+        and a1.created_at &lt;= #{max,jdbcType=TIMESTAMP}
+        <if test="address!=null and address!=''">
+            and a2.address=#{address,jdbcType=VARCHAR}
+        </if>
+        GROUP BY a1.user_id;
+    </select>
+    <select id="getCollectionStatistical" resultType="io.sinso.dataland.model.FileCollection">
+        SELECT count(address) as id,address as nft_name  from co_file_collection a1
+        LEFT JOIN co_user a2 on a1.user_id=a2.id where a1.is_favorited=true
+        and  a1.created_at &gt;= #{min,jdbcType=TIMESTAMP}
+        and a1.created_at &lt;= #{max,jdbcType=TIMESTAMP}
+        GROUP BY a1.user_id;
+    </select>
+</mapper>
