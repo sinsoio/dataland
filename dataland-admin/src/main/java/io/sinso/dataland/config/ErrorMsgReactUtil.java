@@ -18,7 +18,6 @@ public class ErrorMsgReactUtil {
         return react;
     }
 
-
     /**
      * setReact
      */

@@ -183,3 +183,8 @@ CREATE TABLE `co_user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+INSERT INTO `dataland`.`co_scan_config`(`id`, `revision`, `api_key`, `key_lock_at`) VALUES (1, 65, 'FO1qfwww', '2022-07-26 00:00:00');
+INSERT INTO `dataland`.`co_scan_config`(`id`, `revision`, `api_key`, `key_lock_at`) VALUES (2, 1, 'XLhwsN85', '2022-07-26 00:00:00');
+
